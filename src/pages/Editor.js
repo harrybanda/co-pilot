@@ -4,14 +4,17 @@ import Axios from "axios";
 import Formatter from "code-formatter";
 import MonacoEditor from "react-monaco-editor";
 import MicRecorder from "mic-recorder-to-mp3";
+import logo from "../images/logo.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Mp3Recorder = new MicRecorder({ bitRate: 128 });
 
 const Editor = () => {
   const [code, setCode] = useState("");
-  const [blobURL, setBlobURL] = useState("");
   const [isRecording, setRecording] = useState(false);
   const [isBlocked, setBlocked] = useState(false);
+  const [btnIcon, setBtnIcon] = useState("microphone");
+  const [btnColor, setBtnColor] = useState("#2d96ec");
 
   const editorDidMount = (editor, monaco) => {
     editor.focus();
@@ -64,6 +67,7 @@ const Editor = () => {
       Mp3Recorder.start()
         .then(() => {
           setRecording(true);
+          console.log("rec");
         })
         .catch((e) => console.error(e));
     }
@@ -73,11 +77,24 @@ const Editor = () => {
     Mp3Recorder.stop()
       .getMp3()
       .then(([buffer, blob]) => {
-        const blobURL = URL.createObjectURL(blob);
-        setBlobURL(blobURL);
         setRecording(false);
+        console.log(buffer);
+        console.log(blob);
+        console.log("stop rec");
       })
       .catch((e) => console.log(e));
+  };
+
+  const toggleButton = () => {
+    if (isRecording) {
+      stop();
+      setBtnIcon("microphone");
+      setBtnColor("#2d96ec");
+    } else {
+      start();
+      setBtnIcon("stop");
+      setBtnColor("#ec2d2d");
+    }
   };
 
   useEffect(() => {
@@ -105,38 +122,28 @@ const Editor = () => {
         <div className="navbar-brand">
           <Link to="/landing">
             <a className="navbar-item">
-              <img
-                src="https://bulma.io/images/bulma-logo.png"
-                alt="Bulma: Free, open source, and modern CSS framework based on Flexbox"
-                width="112"
-                height="28"
-              />
+              <img src={logo} width="112" height="28" />
             </a>
           </Link>
         </div>
       </nav>
-      <div className="columns">
-        <div className="column is-four-fifths">
-          <MonacoEditor
-            width="100%"
-            height="500"
-            language="javascript"
-            theme="vs-dark"
-            value={code}
-            options={options}
-            onChange={onChange}
-            editorDidMount={editorDidMount}
-          />
-        </div>
-        <div className="column">
-          <button onClick={start} disabled={isRecording}>
-            Record
-          </button>
-          <button onClick={stop} disabled={!isRecording}>
-            Stop
-          </button>
-          <audio src={blobURL} controls="controls" />
-        </div>
+      <MonacoEditor
+        width="100%"
+        height="100%"
+        language="javascript"
+        theme="vs-dark"
+        value={code}
+        options={options}
+        onChange={onChange}
+        editorDidMount={editorDidMount}
+      />
+      <div class="float-btn" style={{ backgroundColor: btnColor }}>
+        <FontAwesomeIcon
+          icon={btnIcon}
+          size="2x"
+          className="float-icon"
+          onClick={toggleButton}
+        />
       </div>
     </Fragment>
   );
