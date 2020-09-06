@@ -1,20 +1,41 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { Link } from "react-router-dom";
 import Axios from "axios";
 import Formatter from "code-formatter";
 import MonacoEditor from "react-monaco-editor";
-import MicRecorder from "mic-recorder-to-mp3";
-import logo from "../images/logo.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Recorder from "recorder-js";
+import "../styles/editor.css";
 
-const Mp3Recorder = new MicRecorder({ bitRate: 128 });
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+const recorder = new Recorder(audioContext);
+
+let instructions =
+  "/*\n" +
+  "                 __|__\n" +
+  "          --o--o--(_)--o--o--\n" +
+  "  _____           ___   _  __      __\n" +
+  " / ___/___  ____ / _ \\ (_)/ /___  / /_\n" +
+  "/ /__ / _ \\/___// ___// // // _ \\/ __/\n" +
+  "\\___/ \\___/    /_/   /_//_/ \\___/\\__/\n" +
+  "\n" +
+  "          ⭐ INSTRUCTIONS ⭐\n" +
+  "\n" +
+  "1. Press the green mic button to speak to Co-Pilot.\n" +
+  "2. You can ask Co-Pilot to do any of the following:\n" +
+  "   👉 Insert a try catch block\n" +
+  "   👉 Add a foreach loop\n" +
+  "   👉 Add a use effect hook\n" +
+  "   and more... ✈️\n" +
+  "3. Press the button again to stop recording.\n" +
+  "4. Watch as Co-Pilot writes the code for you. 🙂\n" +
+  "*/";
 
 const Editor = () => {
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState(instructions);
   const [isRecording, setRecording] = useState(false);
   const [isBlocked, setBlocked] = useState(false);
   const [btnIcon, setBtnIcon] = useState("microphone");
-  const [btnColor, setBtnColor] = useState("#2d96ec");
+  const [btnColor, setBtnColor] = useState("#0C9");
 
   const editorDidMount = (editor, monaco) => {
     editor.focus();
@@ -41,18 +62,18 @@ const Editor = () => {
     }
   };
 
-  const sendMessage = async () => {
-    const message = "insert a for of loop";
-    const headers = {
-      headers: {
-        Authorization: "Bearer " + process.env.REACT_APP_WIT_TOKEN,
-      },
-    };
+  const sendMessage = async (blob) => {
     try {
-      const response = await Axios.get(
-        process.env.REACT_APP_WIT_URL + message,
-        headers
-      );
+      const response = await Axios({
+        method: "post",
+        url: process.env.REACT_APP_WIT_URL,
+        data: blob,
+        headers: {
+          Authorization: "Bearer " + process.env.REACT_APP_WIT_TOKEN,
+          "Content-Type": "audio/wav",
+        },
+      });
+      console.log(response);
       let entity = response.data.entities["code:code"][0].body;
       getCode(entity.replace(/\s/g, ""));
     } catch (error) {
@@ -61,72 +82,45 @@ const Editor = () => {
   };
 
   const start = () => {
-    if (isBlocked) {
-      console.log("Permission Denied");
-    } else {
-      Mp3Recorder.start()
-        .then(() => {
-          setRecording(true);
-          console.log("rec");
-        })
-        .catch((e) => console.error(e));
-    }
+    recorder.start().then(() => setRecording(true));
   };
 
   const stop = () => {
-    Mp3Recorder.stop()
-      .getMp3()
-      .then(([buffer, blob]) => {
-        setRecording(false);
-        console.log(buffer);
-        console.log(blob);
-        console.log("stop rec");
-      })
-      .catch((e) => console.log(e));
+    recorder.stop().then(({ blob, buffer }) => {
+      setRecording(false);
+      sendMessage(blob);
+    });
   };
 
   const toggleButton = () => {
-    if (isRecording) {
-      stop();
-      setBtnIcon("microphone");
-      setBtnColor("#2d96ec");
-    } else {
-      start();
-      setBtnIcon("stop");
-      setBtnColor("#ec2d2d");
+    if (!isBlocked) {
+      if (isRecording) {
+        stop();
+        setBtnIcon("microphone");
+        setBtnColor("#0C9");
+      } else {
+        start();
+        setBtnIcon("stop");
+        setBtnColor("#ec2d2d");
+      }
     }
   };
 
   useEffect(() => {
-    sendMessage();
-    navigator.getUserMedia(
-      { audio: true },
-      () => {
-        console.log("Permission Granted");
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then((stream) => {
+        recorder.init(stream);
         setBlocked(false);
-      },
-      () => {
-        console.log("Permission Denied");
+      })
+      .catch((err) => {
+        console.log("Uh oh... unable to get stream...", err);
         setBlocked(true);
-      }
-    );
+      });
   }, []);
 
   return (
     <Fragment>
-      <nav
-        className="navbar is-black"
-        role="navigation"
-        aria-label="main navigation"
-      >
-        <div className="navbar-brand">
-          <Link to="/landing">
-            <a className="navbar-item">
-              <img src={logo} width="112" height="28" />
-            </a>
-          </Link>
-        </div>
-      </nav>
       <MonacoEditor
         width="100%"
         height="100%"
@@ -137,13 +131,12 @@ const Editor = () => {
         onChange={onChange}
         editorDidMount={editorDidMount}
       />
-      <div class="float-btn" style={{ backgroundColor: btnColor }}>
-        <FontAwesomeIcon
-          icon={btnIcon}
-          size="2x"
-          className="float-icon"
-          onClick={toggleButton}
-        />
+      <div
+        className="float-btn"
+        style={{ backgroundColor: btnColor }}
+        onClick={toggleButton}
+      >
+        <FontAwesomeIcon icon={btnIcon} size="2x" className="float-icon" />
       </div>
     </Fragment>
   );
