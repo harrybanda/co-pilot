@@ -8,45 +8,45 @@ import logo from "../images/logo.png";
 const Landing = () => {
   return (
     <Fragment>
-      <section class="hero is-dark">
-        <div class="hero-body">
-          <div class="container">
-            <div class="columns">
-              <div class="column">
-                <h1 class="title text-wrap-header">
+      <section className="hero is-dark">
+        <div className="hero-body">
+          <div className="container">
+            <div className="columns">
+              <div className="column">
+                <h1 className="title text-wrap-header">
                   Code faster with{" "}
                   <span style={{ color: "#00FFFF" }}>Co-Pilot.</span>
                 </h1>
                 <br />
-                <h2 class="subtitle text-wrap-header">
+                <h2 className="subtitle text-wrap-header">
                   Co-Pilot is an AI voice assistant that aims to help developers
                   speed up software development time by simply speaking to their
                   code edtior in natural language.
                 </h2>
                 <Link to="/editor">
-                  <button class="button is-white">
-                    <span class="icon">
+                  <button className="button is-white">
+                    <span className="icon">
                       <FontAwesomeIcon icon="laptop-code" />
                     </span>
                     <span>Try out the demo</span>
                   </button>
                 </Link>
               </div>
-              <div class="column">
+              <div className="column">
                 <div className="container">
-                  <img src={Img1} />
+                  <img src={Img1} alt="header" />
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>
-      <section class="section has-background-dark has-text-white">
-        <div class="container">
-          <div class="columns">
-            <div class="column">
-              <div class="box has-background-black">
-                <h1 class="subtitle is-4" style={{ color: "#FFF" }}>
+      <section className="section has-background-dark has-text-white">
+        <div className="container">
+          <div className="columns">
+            <div className="column">
+              <div className="box has-background-black">
+                <h1 className="subtitle is-4" style={{ color: "#FFF" }}>
                   <FontAwesomeIcon
                     icon="microphone"
                     size="1x"
@@ -54,7 +54,7 @@ const Landing = () => {
                   />{" "}
                   Code Naturally
                 </h1>
-                <h2 class="subtitle has-text-grey-light">
+                <h2 className="subtitle has-text-grey-light">
                   Write code with natural speech commands like{" "}
                   <span style={{ color: "#00FFFF" }}>add for loop </span>
                   and <span style={{ color: "#00FFFF" }}>
@@ -64,9 +64,9 @@ const Landing = () => {
                 </h2>
               </div>
             </div>
-            <div class="column">
-              <div class="box has-background-black">
-                <h1 class="subtitle is-4" style={{ color: "#FFF" }}>
+            <div className="column">
+              <div className="box has-background-black">
+                <h1 className="subtitle is-4" style={{ color: "#FFF" }}>
                   <FontAwesomeIcon
                     icon="clock"
                     size="1x"
@@ -74,7 +74,7 @@ const Landing = () => {
                   />{" "}
                   Increase productivity
                 </h1>
-                <h2 class="subtitle has-text-grey-light">
+                <h2 className="subtitle has-text-grey-light">
                   Code faster and stay in flow. Co-Pilot helps you save time,
                   Instead of typing long lines of code you can simply generate
                   it with natural speech in no time.
@@ -84,9 +84,9 @@ const Landing = () => {
           </div>
         </div>
       </section>
-      <footer class="footer has-background-black">
-        <div class="content has-text-centered">
-          <img src={logo} width="112" height="28" />
+      <footer className="footer has-background-black">
+        <div className="content has-text-centered">
+          <img src={logo} width="112" height="28" alt="logo" />
         </div>
       </footer>
     </Fragment>

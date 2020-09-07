@@ -13,14 +13,13 @@
     "bulma": "^0.9.0",
     "code-formatter": "0.0.1",
     "dotenv": "^8.2.0",
-    "mic-recorder-to-mp3": "^2.2.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-monaco-editor": "^0.40.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
-    "recorder-js": "^1.0.7",
-    "recorderx": "^2.0.2"
+    "react-speech-recognition": "^3.2.2",
+    "react-toastify": "^6.0.8"
   },
   "scripts": {
     "start": "react-app-rewired start",
