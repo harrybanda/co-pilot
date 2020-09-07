@@ -12,8 +12,9 @@ let text =
   "1. Press the green mic button to speak to Co-Pilot.\n" +
   "2. You can ask Co-Pilot to do any of the following:\n" +
   "   👉 Insert a try catch block\n" +
-  "   👉 Add a foreach loop\n" +
-  "   👉 Add a use effect hook\n" +
+  "   👉 Add a switch statement\n" +
+  "   👉 Insert an async function\n" +
+  "   👉 Show me how to write comments in Javascript?\n" +
   "   and more... ✈️\n" +
   "3. Press the button again to stop recording.\n" +
   "4. Watch as Co-Pilot writes the code for you. 🙂\n" +
