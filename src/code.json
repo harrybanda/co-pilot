@@ -1,0 +1,27 @@
+[
+  { "name": "forin", "value": "for(variable in object) {statement}" },
+  {
+    "name": "functional component",
+    "value": "function Welcome(props) {return <h1>Hello, {props.name}</h1>;}"
+  },
+  { "name": "useeffect", "value": "useEffect(() => {}, []);" },
+  { "name": "usestate", "value": "const [count, setCount] = useState(0);" },
+  {
+    "name": "foreach",
+    "value": "array.forEach(element => console.log(element));"
+  },
+  {
+    "name": "trycatch",
+    "value": "try { try_statements } catch (exception_var) { catch_statements } finally { finally_statements }"
+  },
+  {
+    "name": "forloop",
+    "value": "for (let i = 0; i < 9; i++) { str = str + i; }"
+  },
+  {
+    "name": "switch",
+    "value": "switch(expression) { case x: /*code block break*/; case y: /*code block break*/ break; default: /*code block break*/ }"
+  },
+  { "name": "forof", "value": "for (variable of iterable) { // code block to be executed }" }
+]
+
