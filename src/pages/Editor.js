@@ -6,6 +6,7 @@ import Instructions from "../components/Instructions";
 import Dictaphone from "../components/Dictaphone";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import db from "./../code.json";
 
 const Editor = () => {
   const [code, setCode] = useState(Instructions.text);
@@ -34,19 +35,17 @@ const Editor = () => {
     });
 
   const getCode = async (val, transcript) => {
-    try {
-      const response = await Axios.get(process.env.REACT_APP_CODE_URL + val);
-      const content = response.data.Items[0].code["S"];
-      const formatted = Formatter(content, {
-        method: "js",
-      });
-      setCode(formatted + "\n\n" + code);
-      console.log("db key: " + val);
-    } catch (error) {
-      console.error(error);
-      notify(transcript);
-      console.log(val + " not found in the db");
-    }
+    console.log("val: " + val);
+    console.log("trans: " + transcript);
+    let c = db.find((o) => o.name === val);
+
+    console.log(c.value);
+
+    const formatted = Formatter(c.value, {
+      method: "js",
+    });
+    setCode(formatted + "\n\n" + code);
+    console.log(formatted);
   };
 
   const sendMessage = async (transcript, resetTranscript) => {
